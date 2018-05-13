@@ -21,10 +21,6 @@ def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1
     if(depth <=0):
         track = math.floor((freq1/120)*tracks)
 
-        print(freq1)
-        print(track)
-
-
         midi.addNote(track, 9, int(freq1), int(time1*totalTime), int((time2 - time1)*totalTime), int(amp1*100))
 
         return
