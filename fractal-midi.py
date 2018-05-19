@@ -14,7 +14,7 @@ tracks = 6
 
 def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1, amp1, amp2):
     if(depth <=0):
-        est_max = 216
+        est_max = 264
         track = math.floor((freq1/est_max)*tracks) # split midi notes across tracks
         freq = freq1 - track*(est_max/tracks)
 
@@ -57,7 +57,7 @@ transformations = [
 	[0.75,  1,      0,      24,      1,     0.75]
 ]
 
-depth=6
+depth=8
 freq =0
 t1=0
 t2=1
