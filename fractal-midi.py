@@ -8,7 +8,7 @@ import numpy as np
 import sys
 
 
-tracks = 6
+tracks = 8
 
 def frequency_to_note(f):
     if(f > 0):
@@ -20,16 +20,20 @@ def frequency_to_note(f):
 
 def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1, freq2, amp1, amp2):
     if(depth <=0):
-        est_max = 12*100
-        print(freq1)
-        track = math.floor((freq1/est_max)*tracks) # split midi notes across tracks
+  
+        
         # freq = freq1 - track*(est_max/tracks)
 
-        factor = 10
+        factor = 0.05
         freq = factor*freq1
         note = int(frequency_to_note(freq))
+
+        est_max = 255
+        track = math.floor((note/est_max)*tracks) # split midi notes across tracks
+        print(track, note)
         tuning = [(note, int(freq))]
         #MyMIDI.changeNoteTuning(0, tuning, tuningProgam=0)
+        
         midi.addNote(track, 9, int(note), int(time1*totalTime), int((time2 - time1)*totalTime), int(amp1*100))
 
         return
@@ -58,7 +62,7 @@ MyMIDI.addTempo(track, time, tempo)
 
 
 ####################### futz here ####################
-measures = 100
+measures = 500
 
 transformations = [
 	[0,     0.25,    2,   1,     0,      0.75],
@@ -67,7 +71,7 @@ transformations = [
     [0.75,     0.25,    4,   0,      0.5,   1],
 ]
 
-depth=5
+depth=9
 freq1 =1
 freq2 = 1
 t1=0
