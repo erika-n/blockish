@@ -24,12 +24,13 @@ def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1
         
         # freq = freq1 - track*(est_max/tracks)
 
-        factor = 0.05
+        factor = 1
         freq = factor*freq1
-        note = int(frequency_to_note(freq))
-
-        est_max = 255
-        track = math.floor((note/est_max)*tracks) # split midi notes across tracks
+        #note = int(frequency_to_note(freq))
+        note = freq1
+        est_max = 88
+        est_min = 30
+        track = math.floor(((note - est_min)/est_max)*tracks) # split midi notes across tracks
         print(track, note)
         tuning = [(note, int(freq))]
         #MyMIDI.changeNoteTuning(0, tuning, tuningProgam=0)
@@ -42,7 +43,7 @@ def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1
     awidth = amp2 - amp1
     fwidth = freq2 - freq1
     for t in transformations:
-        fractal_midi(transformations, midi, totalTime, depth - 1, time1 + twidth*t[0], time1 + twidth*t[1], freq1*t[2], freq2*t[3], amp1 + awidth*t[4], amp1 + awidth*t[5])
+        fractal_midi(transformations, midi, totalTime, depth - 1, time1 + twidth*t[0], time1 + twidth*t[1], freq1 + t[2], freq2*t[3], amp1 + awidth*t[4], amp1 + awidth*t[5])
 
 
 track    = 0
@@ -65,10 +66,10 @@ MyMIDI.addTempo(track, time, tempo)
 measures = 500
 
 transformations = [
-	[0,     0.25,    2,   1,     0,      0.75],
-#	[0.5,     1,    3,   1,      0.75,   0],
-	[0.75,  1,      3,      0.5,      1,     0.75],
-    [0.75,     0.25,    4,   0,      0.5,   1],
+	[0,     0.25,    7,   1,     0,      0.75],
+    [0.5,     1,    12,   1,      0.75,   0],
+	[0.75,  1,      0,      0.5,      1,     0.75],
+    [0.75,     0.25,    7,   0,      0.5,   1],
 ]
 
 depth=9
