@@ -8,7 +8,7 @@ import numpy as np
 import sys
 
 
-tracks = 3
+tracks = 1
 
 def frequency_to_note(f):
     if(f > 0):
@@ -53,7 +53,9 @@ def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1
         #factor = 2
         #freq = factor*freq1
         #note = int(frequency_to_note(freq))
-        note = freq1
+        
+        note = freq1*128 + 24
+        print(freq1, note)
         est_max = 140
         est_min = 0
         global max_note
@@ -62,11 +64,15 @@ def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1
        
         #tuning = [(note, int(freq1))]
         #MyMIDI.changeNoteTuning(0, tuning, tuningProgam=0)
-        note += 30
+
+        if(track >= 4):
+            note -= 2*12 #make tracks in reasonable range
+        
+
 
 
         #print(track, note)
-        if(note > 0 and note < 255):
+        if(note > 0 and note < 100):
             midi.addNote(track, 9, int(note), int(time1*totalTime), int((time2 - time1)*totalTime), int(amp1*100))
 
         return
@@ -75,7 +81,7 @@ def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1
     awidth = amp2 - amp1
     fwidth = freq2 - freq1
     for t in transformations:
-        fractal_midi(transformations, midi, totalTime, depth - 1, time1 + twidth*t[0], time1 + twidth*t[1], freq1 + t[2], freq2*t[3], amp1 + awidth*t[4], amp1 + awidth*t[5])
+        fractal_midi(transformations, midi, totalTime, depth - 1, time1 + twidth*t[0], time1 + twidth*t[1], freq1 + fwidth*t[2], freq1 + fwidth*t[3], amp1 + awidth*t[4], amp1 + awidth*t[5])
 
 
 track    = 0
@@ -95,18 +101,32 @@ MyMIDI.addTempo(track, time, tempo)
 
 
 ####################### futz here ####################
-measures = 100
+measures = 30
+
+# transformations = [
+# 	[0.2501,      0.01,    12,   1,     0,      0.75],
+#     [0.25,     0.501,       0,   1,      0.75,   0],
+# 	[0.75,        0.25,      7,      0.5,      1,     0.75],
+#     [0.75,         0.999,      0,      0.5,      0.5,     0.75],
+# ]
 
 transformations = [
-	[0.5,         1,    12,   1,     0,      0.75],
-    [0,     0.5,       0,   1,      0.75,   0],
-	[0,        0.75,      7,      0.5,      1,     0.75],
-    #[0.5,         0.75,      0,      0.5,      0.5,     0.75],
+	# [0.25,      0,    12,   1,     0,      0.75],
+    # [0.25,     0.5,       0,   1,      0.75,   0],
+	# [0.75,        0.25,      7,      0.5,      1,     0.75],
+    # [0.75,         1,      0,      0.5,      0.5,     0.75],
+
+
+	[1, 0.5,        0,  0.5, 0.5, 0],
+	[0.5, 0,     0, 0.5, 0.25, 0.75],
+    [0.25,  0.75,   1, 0.5,0.5,     0.75],
+    #[0,  0.5,      1,     0.5,0,     0.5],
 ]
 
-depth=6
+
+depth=5
 freq1 =0
-freq2 = 0
+freq2 = 1
 t1=0
 t2=1
 amp1=0
