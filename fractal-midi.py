@@ -8,80 +8,33 @@ import numpy as np
 import sys
 
 
-tracks = 1
-
-def frequency_to_note(f):
-    if(f > 0):
-        return math.floor(12*math.log(f/440.0, 2))+57
-    else:
-        print('<= zero encountered in frequency_to_note')
-        return 57
-
-
-
-max_note = 0
-min_note = 1000000
-
-
-def  fractal_midi_for_max_min(transformations,   midi, totalTime, depth, time1, time2, freq1, freq2, amp1, amp2):
-    
-    if(depth <=0):
-        
-        note = freq1
-        global max_note
-        global min_note
-        max_note = max(max_note, note)
-        min_note = min(min_note, note)
-
-        return
-    
-    twidth = time2 - time1
-    awidth = amp2 - amp1
-    fwidth = freq2 - freq1
-    for t in transformations:
-        fractal_midi_for_max_min(transformations, midi, totalTime, depth - 1, time1 + twidth*t[0], time1 + twidth*t[1], freq1 + t[2], freq2*t[3], amp1 + awidth*t[4], amp1 + awidth*t[5])
-
-
-
+tracks = 4
 
 def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1, freq2, amp1, amp2):
     if(depth <=0):
   
         
-        # freq = freq1 - track*(est_max/tracks)
+        track = math.floor(freq1*(tracks - 1)) # split midi notes across tracks
 
-        #factor = 2
-        #freq = factor*freq1
-        #note = int(frequency_to_note(freq))
+        note = freq1 + freq2
         
-        note = freq1*128 + 24
-        print(freq1, note)
-        est_max = 140
-        est_min = 0
-        global max_note
-        global min_note
-        track = math.floor(((note - min_note)/max_note)*(tracks - 1)) # split midi notes across tracks
-       
-        #tuning = [(note, int(freq1))]
-        #MyMIDI.changeNoteTuning(0, tuning, tuningProgam=0)
-
-        if(track >= 4):
-            note -= 2*12 #make tracks in reasonable range
+        track = math.floor(note / 60) % tracks
+        note = note % 60 
+        note += 36
         
 
-
-
-        #print(track, note)
-        if(note > 0 and note < 100):
-            midi.addNote(track, 9, int(note), int(time1*totalTime), int((time2 - time1)*totalTime), int(amp1*100))
+        print(freq1, note, track)
+        midi.addNote(track, 9, int(note), int(time1*totalTime), int(abs(time2 - time1)*totalTime), int(amp1*100))
 
         return
+    
+
     
     twidth = time2 - time1
     awidth = amp2 - amp1
     fwidth = freq2 - freq1
     for t in transformations:
-        fractal_midi(transformations, midi, totalTime, depth - 1, time1 + twidth*t[0], time1 + twidth*t[1], freq1 + fwidth*t[2], freq1 + fwidth*t[3], amp1 + awidth*t[4], amp1 + awidth*t[5])
+        fractal_midi(transformations, midi, totalTime, depth - 1, time1 + twidth*t[0], time1 + twidth*t[1], freq1+t[2], freq2- fwidth*t[3], amp1 + awidth*t[4], amp1 + awidth*t[5])
 
 
 track    = 0
@@ -101,32 +54,31 @@ MyMIDI.addTempo(track, time, tempo)
 
 
 ####################### futz here ####################
-measures = 30
-
-# transformations = [
-# 	[0.2501,      0.01,    12,   1,     0,      0.75],
-#     [0.25,     0.501,       0,   1,      0.75,   0],
-# 	[0.75,        0.25,      7,      0.5,      1,     0.75],
-#     [0.75,         0.999,      0,      0.5,      0.5,     0.75],
-# ]
+measures = 300
 
 transformations = [
-	# [0.25,      0,    12,   1,     0,      0.75],
-    # [0.25,     0.5,       0,   1,      0.75,   0],
+
+	# [0.2501,      0.01,    12,   1,     0,      0.75],
+    # [0.25,     0.501,       0,   1,      0.75,   0],
 	# [0.75,        0.25,      7,      0.5,      1,     0.75],
-    # [0.75,         1,      0,      0.5,      0.5,     0.75],
+    # [0.75,         0.999,      0,      0.5,      0.5,     0.75],
 
+	[0,        0.25,        12,        0,     0,      0.5],
+    [1,        0.5,       12,        0,      0.5,   0],
+	[0.5,        1,      7,      0,      0.75,     0.5],
+    [0.5,         0,      7,        0,      0.5,     0.75],    
+    #[0.75,         1,      0,        2,      0.5,     0.75],
 
-	[1, 0.5,        0,  0.5, 0.5, 0],
-	[0.5, 0,     0, 0.5, 0.25, 0.75],
-    [0.25,  0.75,   1, 0.5,0.5,     0.75],
-    #[0,  0.5,      1,     0.5,0,     0.5],
+# 	[0.5, 1,        1,   0.5,   0, 0.5],
+# 	[0, 0.5,       0.5,0.25,      0.5, 0],
+#     [0.25,  0.75,   0.75,0.25,          1,     0.5],
+#    # [0,  0.75,      1,     0,   1,     0.5],
 ]
 
 
-depth=5
+depth=7
 freq1 =0
-freq2 = 1
+freq2 =0
 t1=0
 t2=1
 amp1=0
@@ -137,10 +89,10 @@ for track in range(tracks):
     MyMIDI.addNote(track, 0, 1, totalTime-1, 1, 1)
 
 
-fractal_midi_for_max_min(transformations,  MyMIDI, totalTime, depth, t1, t2,freq1,freq2, amp1, amp2)
-print(max_note, min_note)
+
 
 fractal_midi(transformations,  MyMIDI, totalTime, depth, t1, t2,freq1,freq2, amp1, amp2)
 
+print("writing file...")
 with open("fractal-midi.mid", "wb") as output_file:
     MyMIDI.writeFile(output_file)
