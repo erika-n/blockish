@@ -11,20 +11,29 @@ import sys
 tracks = 4
 octaves = 4
 
-
+midifreq = np.zeros(127)
+a = 440
+for x in range(127):
+   midifreq[x] = (a / 32) * (2 ** ((x - 9) / 12))
 
 
 def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1, freq2, amp1, amp2):
     if(depth <=0):
 
-        scale = [0,2,  5,7, 9]
-        note = freq1 +freq2 
-        track = int(note % tracks)
-        note = note / tracks
+#        scale = [0,2,  5,7, 9]
+#        note = freq1 +freq2 
+        track = 0#
+#        note = note / tracks
 
-        note = 48 + scale[int(note % len(scale))] + 12* (math.ceil(note/(len(scale)))% octaves)
-        
-        print(freq1, note, track, int(time1*totalTime))
+ #       note = 48 + scale[int(note % len(scale))] + 12* (math.ceil(note/(len(scale)))% octaves)
+    
+        note = -1
+        for x in range(127):
+            if freq2 < midifreq[x]:
+                note = x
+                break
+
+        print(freq2, note, track, int(time1*totalTime))
         
 
 
@@ -53,7 +62,7 @@ volume   = 100  # 0-127, as per the MIDI standard
 
 
 tempo = 120
-ticks_per_quarternote = 960
+ticks_per_quarternote = 100
 
 
 MyMIDI = MIDIFile(tracks, removeDuplicates=True, deinterleave=False,ticks_per_quarternote=ticks_per_quarternote,eventtime_is_ticks=True) 
@@ -91,8 +100,7 @@ transformations = [
 	[0.25,      0,          0,   2,     0,      0.75],
     [0,     0.5,           0,   4,      0.75,   0],
 	[0.5,        0 ,      0,      3,      1,     0.75],
-    [0.5,         1,       0.,      5,      0.5,     0.75],
-
+    [0.5,         1,       0.,      2,      0.5,     0.75]
     # #[0,  0.5,      1,     0.5,0,     0.5],
 ]
 
