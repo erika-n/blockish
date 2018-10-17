@@ -12,10 +12,7 @@ import random
 # recurse such that
 # for A
 # A => ABA
-# A = aga
-# B => new A
-# g => new a (new note)
-# 
+
 
 scale = [60, 62, 64, 65, 67, 69, 71, 72]
 
