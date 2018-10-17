@@ -16,21 +16,23 @@ def freqToMid(f):
 def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1, freq2, amp1, amp2):
     if(depth <=0):
 
-        track = 0
-
-
+        track = math.floor(freq1/(440*30)) 
         note = freqToMid(freq1)
 
+        #print(note)
 
-        #print(note, track, int(time1*totalTime), int(amp1*100))
-
-
-        if(note > 0 and note < 100):
-            if(time2 -time1 < 0):
+        #note -= track*36
+        note -= 12
+        
+        #print(note, track, time1, int(time1*totalTime), int(amp1*100), track)
+        if(note > 10 and note < 100 and track < tracks):
+           
+            if(time2 -time1 > 0):
                 time1 -= abs(time2 -time1)
          
-            midi.addNote(track, 9, int(note), int(time1*totalTime), int(abs(time2 - time1)*totalTime), int(amp1*80))
-
+            if(time1 > 0):
+                midi.addNote(track, 9, int(note), int(time1*totalTime), int(abs(time2 - time1)*totalTime), int(amp1*80))
+           
         return
     
     twidth = time2 - time1
@@ -76,26 +78,27 @@ transformations = [
     # [0.5,         1,      0.75,      0.25,      0.5,     0.75],
 
 #sierpinsky triad:
-	# [1, 0.5,        0,  0.5, 0.5, 0],
-	# [0.5, 0,     0, 0.5, 0.25, 0.75],
-    # [0.25,  0.75,   1, 0.5,0.5,     0.75],
+	# [1, 0.5,        2,  0.5, 0.5, 0],
+	# [0.5, 0,     4, 0.5, 0.25, 0.75],
+    # [0,  0.75,   1, 0.5,0.5,     0.75],
+    # [1,      0.25,       3,   -2,     0.5,      0.75],
 
+#	[0.5, 0.25,        2,  2, 0.5, 0],
+	[0, 0.5,        2, 4, 0.25, 0.75],
+    [0,  0.5    ,   4, 8,0.5,     1],
+    [1, 0.5    ,   3, 8,0,     0.75],
 
-	# [1, 0.5,        0,  2, 0.5, 0],
-	# [0.5, 0,        0, 4, 0.25, 0.75],
-    # [0.25,  0    ,   0, 8,0.5,     0.75],
-
-
-	[0.25,      0.75,       2,   -2,     0.5,      0.75],
-    [1,         0.75,      6,   -6,      0.25,  0],
-	[0.25,        0,      3,      -3,      0.25,     0],
-    [0.25,         1,       3,      -3,      0.5,     0],
-    [0,           0.5,      4,      -4,       1,     0.5],
+    [1, 0.5    ,   1,8, 0.5,     0],
+	# [0.25,      0.75,       2,   -2,     0.5,      0.75],
+    # [1,         0.75,      6,   -6,      0.25,  0],
+	# [0.25,        0,      3,      -3,      0.25,     0],
+    # [0.25,         1,       3,      -3,      0.5,     0],
+    # [0,           0.5,      4,      -4,       1,     0.5],
 
 ]
 
 
-depth=5
+depth=8
 freq1 =1
 freq2 = 0
 t1=0
