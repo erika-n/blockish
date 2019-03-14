@@ -17,7 +17,9 @@ import random
 scale = [60, 62, 64, 65, 67, 69, 71, 72]
 
 def aba_pattern(midi, letter, noteIndex, time1, time2, totalTime, depth):
+    
     if(depth <= 0):
+        print(noteIndex)
         amp = 80
         
         
@@ -26,24 +28,42 @@ def aba_pattern(midi, letter, noteIndex, time1, time2, totalTime, depth):
 
 
     twidth = time2- time1
-    if(letter == 'C'):
-        noteIndex = ((noteIndex + random.choice([3, 4])) % len(scale) )
-    if (letter == 'A' or letter == 'C'):
-        aba_pattern(midi, "A",noteIndex, time1, time1 + twidth/4, totalTime, depth -1)
-        bNoteIndex = ((noteIndex + random.choice([4])) % len(scale) )
-        print("bNoteIndex: ", bNoteIndex)    
-        aba_pattern(midi, "A",noteIndex, time1, time1 + twidth/4, totalTime, depth -1)
-        aba_pattern(midi, "B", bNoteIndex, time1 + twidth/4, time1 + 3*twidth/4, totalTime, depth -1)
-        aba_pattern(midi, "C", noteIndex, time1 + 3*twidth/4, time2, totalTime, depth -1)
+    # if(letter == 'C'):
+    #     noteIndex = ((noteIndex + random.choice([3, 4])) % len(scale) )
+    # if (letter == 'A' or letter == 'C'):
+    #     aba_pattern(midi, "A",noteIndex, time1, time1 + twidth/4, totalTime, depth -1)
+    #     bNoteIndex = ((noteIndex + random.choice([4])) % len(scale) )
+    #     print("bNoteIndex: ", bNoteIndex)    
+    #     aba_pattern(midi, "A",noteIndex, time1, time1 + twidth/4, totalTime, depth -1)
+    #     aba_pattern(midi, "B", bNoteIndex, time1 + twidth/4, time1 + 3*twidth/4, totalTime, depth -1)
+    #     aba_pattern(midi, "C", noteIndex, time1 + 3*twidth/4, time2, totalTime, depth -1)
          
         
-    elif (letter == 'B'):
-        aNoteIndex = ((noteIndex + random.choice([2])) % len(scale) )
-        print("aNoteIndex", aNoteIndex)
-        aba_pattern(midi, "B", noteIndex, time1, time1 + twidth/2, totalTime, depth -1)
-        aba_pattern(midi, "C", aNoteIndex, time1 + twidth/2, time1 + 3*twidth/4, totalTime, depth -1)
-        aba_pattern(midi, "B", noteIndex, time1 + 3*twidth/4, time2, totalTime, depth -1)
-        aba_pattern(midi, "C", noteIndex, time1 + 3*twidth/4, time2, totalTime, depth -1)
+    # elif (letter == 'B'):
+    #     aNoteIndex = ((noteIndex + random.choice([2])) % len(scale) )
+    #     print("aNoteIndex", aNoteIndex)
+    #     aba_pattern(midi, "B", noteIndex, time1, time1 + twidth/2, totalTime, depth -1)
+    #     aba_pattern(midi, "C", aNoteIndex, time1 + twidth/2, time1 + 3*twidth/4, totalTime, depth -1)
+    #     aba_pattern(midi, "B", noteIndex, time1 + 3*twidth/4, time2, totalTime, depth -1)
+    #     aba_pattern(midi, "C", noteIndex, time1 + 3*twidth/4, time2, totalTime, depth -1)
+
+    if(letter == 'A'):
+        bNoteIndex = (noteIndex + 0) % len(scale) 
+        aNoteIndex = (noteIndex + 0) % len(scale)
+        cNoteIndex = (noteIndex + 2) % len(scale)
+        aba_pattern(midi, "A",aNoteIndex, time1, time1 + twidth/2, totalTime, depth -1)
+        aba_pattern(midi, "B",bNoteIndex, time1 + twidth/2, time2, totalTime, depth -1)
+       # aba_pattern(midi, "A",cNoteIndex, time1 + twidth/2, time2, totalTime, depth -1)
+    elif (letter == 'B' or letter == 'C'):
+        aNoteIndex = (noteIndex + 3 ) % len(scale)
+        bNoteIndex = (noteIndex + 1) %len(scale)
+        cNoteIndex = (noteIndex + 1) %len(scale)
+        aba_pattern(midi, "A",bNoteIndex, time1, time1 + twidth/2, totalTime, depth -1)
+        aba_pattern(midi, "B",aNoteIndex, time1 + twidth/2, time2, totalTime, depth -1)
+        #aba_pattern(midi, "C",cNoteIndex, time1 + twidth/2, time1+3*twidth/4, totalTime, depth -1)
+
+
+
 
 measures =10
 
@@ -68,7 +88,7 @@ MyMIDI.addTempo(track, time, tempo)
 
 totalTime = ticks_per_quarternote*4*measures
 
-aba_pattern(MyMIDI, "A", 0, 0, 1, totalTime,4)
+aba_pattern(MyMIDI, "A", 0, 0, 1, totalTime,5)
 
 with open("fractal-midi.mid", "wb") as output_file:
     MyMIDI.writeFile(output_file)
