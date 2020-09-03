@@ -35,6 +35,8 @@ def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1
            
         return
     
+
+    
     twidth = time2 - time1
     awidth = amp2 - amp1
     fwidth = freq2 - freq1
@@ -121,6 +123,7 @@ totalTime = ticks_per_quarternote*4*measures
 
 fractal_midi(transformations,  MyMIDI, totalTime, depth, t1, t2,freq1,freq2, amp1, amp2)
 
+print("writing file...")
 with open("fractal-midi.mid", "wb") as output_file:
     MyMIDI.writeFile(output_file)
 
