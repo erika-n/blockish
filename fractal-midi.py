@@ -47,7 +47,7 @@ def  fractal_midi(transformations,   midi, totalTime, depth, time1, time2, freq1
         fractal_midi(transformations, midi, totalTime, depth - 1, time1 + twidth*t[0], time1 + twidth*t[1], freq1 * t[2], freq2 + t[3], amp1 + awidth*t[4], amp1 + awidth*t[5])
 
 
-measures = 300
+measures = 100
 
 track    = 0
 channel  = 0
@@ -109,7 +109,7 @@ transformations = [
 ]
 
 
-depth=9
+depth=7
 freq1 =1
 freq2 = 0
 t1=0
