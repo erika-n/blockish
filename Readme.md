@@ -6,6 +6,7 @@ This program uses a fractal algorithm to create a MIDI track. The fractal is def
 ## Usage
 
 python fractal-midi.py
+
 Output: fractal-midi.mid
 
 Futz with transformations and depth within the code to produce novel fractals. Render the MIDI with your favorite DAW.
